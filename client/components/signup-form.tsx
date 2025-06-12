@@ -50,10 +50,13 @@ export function SignupForm({
         router.push("/home")
         setIsLoading(false)
       }, 1000)
-    } catch (error: any) {
-      console.error("Login failed:", error?.response?.data || error.message)
-      setIsLoading(false)
-    }
+     } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Login failed:", error.message)
+      } else {
+        console.error("Login failed:", error)
+      }
+    } 
   }
 
   return (
