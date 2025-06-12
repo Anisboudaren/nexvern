@@ -49,8 +49,12 @@ export function LoginForm({
       }, 1000) // Simulate a delay for demonstration purposes
      
 
-    } catch (error: any) {
-      console.error("Login failed:", error.response?.data || error.message)
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Login failed:", error.message)
+      } else {
+        console.error("Login failed:", error)
+      }
     } 
   }
 
