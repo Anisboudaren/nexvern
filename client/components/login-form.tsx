@@ -30,7 +30,7 @@ export function LoginForm({
   const handleGoogleAuth = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google/login/`
+    window.location.href = `https://nexvearn.onrender.com/api/auth/google/login/`
     console.log("Google authentication not implemented yet.")
   }
 
@@ -42,7 +42,7 @@ export function LoginForm({
 
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/token/`,
+        `https://nexvearn.onrender.com/api/token/`,
         {
 
           username:email,
