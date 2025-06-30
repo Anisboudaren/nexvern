@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@/lib/generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import { hashPassword } from '@/lib/bcrypt';
 import { signToken } from '@/lib/auth';
 
