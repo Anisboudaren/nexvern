@@ -50,6 +50,7 @@ export async function POST(req: Request) {
     });
     return response;
   } catch (error) {
+    console.error('[REGISTER_ERROR]', error); //
     return NextResponse.json({ error: 'Server error', details: String(error) }, { status: 500 });
   }
 }
