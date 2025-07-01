@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import ProjectPopCard from '@/components/Project-pop-card';
 import ProjectCard2 from '@/components/Projet-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ProjectType } from '@/types/index'; // Adjust the import path as needed
 import {
   Select,
   SelectContent,
@@ -13,96 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-const sampleProjects = [
-  {
-    id: '1',
-    projectId: '1',
-    title: 'Bookingz.one — Booking Management with AI',
-    description:
-      "Bookingz.one is a smart booking platform with an AI-powered booking bot. Built for service businesses, it's fully customizable, scalable, and ready for partners to grow and profit with.",
-    category: 'AI',
-    teamSize: 1,
-    stage: 'MVP Stage',
-    stageColor: '#22d3ee',
-    founder: 'Jason Lee',
-    datePosted: '2024-06-29',
-    website: 'https://bookingz.one',
-    status: 'Development',
-    marginRate: '15-25%',
-    roles: [
-      {
-        title: 'Growth Partner',
-        description: 'Help scale our platform and acquire new customers',
-      },
-      {
-        title: 'Chief Technology Officer',
-        description: 'Lead technical strategy and development team',
-      },
-      {
-        title: 'Chief Marketing Officer',
-        description: 'Drive marketing strategy and brand growth',
-      },
-    ],
-    image: 'https://chekin.com/wp-content/uploads/2022/12/booking.com_-768x432.jpeg',
-  },
-  {
-    id: '2',
-    projectId: '2',
-    title: 'EcoFleet — Sustainable Fleet Management',
-    description:
-      'EcoFleet is revolutionizing the logistics space with real-time electric fleet management software that helps businesses cut emissions and save on costs.',
-    category: 'GreenTech',
-    teamSize: 4,
-    stage: 'Seed Stage',
-    stageColor: '#4ade80',
-    founder: 'Amira Chen',
-    datePosted: '2024-05-20',
-    website: 'https://ecofleet.io',
-    status: 'Raising Funds',
-    marginRate: '10-18%',
-    roles: [
-      {
-        title: 'Lead Engineer',
-        description: 'Build and optimize our routing engine',
-      },
-      {
-        title: 'Sustainability Advisor',
-        description: 'Guide product decisions toward eco impact',
-      },
-    ],
-    image:
-      'https://electroverse.com/_next/image?url=https%3A%2F%2Fassets.electricjuice.octopus.energy%2F4560x1900%2Ffe546fcd40%2Fworld-ev-day-fleets.jpg%2Fm%2F1728x0&w=1536&q=75',
-  },
-  {
-    id: '3',
-    projectId: '3',
-    title: 'TutorHive — Community-Driven Micro-Learning',
-    description:
-      'TutorHive connects learners with subject matter experts for fast, effective tutoring. Designed for remote-first education and community-driven learning.',
-    category: 'EdTech',
-    teamSize: 6,
-    stage: 'Launch Ready',
-    stageColor: '#c084fc',
-    founder: 'Noah Ibrahim',
-    datePosted: '2024-06-10',
-    website: 'https://tutorhive.org',
-    status: 'Pre-Launch',
-    marginRate: '20%',
-    roles: [
-      {
-        title: 'Community Manager',
-        description: 'Grow and moderate the tutor network',
-      },
-      {
-        title: 'Product Designer',
-        description: 'Craft intuitive and joyful learning UX',
-      },
-    ],
-    image:
-      'https://assets.techrepublic.com/uploads/2021/04/remote-working-devices-laptop-smartphone-collaboration-mobility.jpg',
-  },
-];
 
 function SectionTitle({ title }: { title: string }) {
   return (
@@ -135,7 +46,7 @@ export default function HomePage() {
   });
 
   const [showMyProjects, setShowMyProjects] = useState(false);
-
+  const [sampleProjects, setSampleProjects] = useState<ProjectType[]>([]);
   // Get unique values for filter options
   const categories = [...new Set(sampleProjects.map(p => p.category))];
   const stages = [...new Set(sampleProjects.map(p => p.stage))];
@@ -236,6 +147,17 @@ export default function HomePage() {
     filters.stage !== 'all' ||
     filters.status !== 'all' ||
     showMyProjects;
+
+  useEffect(() => {
+    // Simulate fetching projects from an API
+    const fetchProjects = async () => {
+      // Replace with actual API call
+      const response = await fetch('/api/projects'); // Adjust the endpoint as needed
+      const data = await response.json();
+      setSampleProjects(data);
+    };
+    fetchProjects();
+  }, []);
 
   return (
     <div className="bg-muted min-h-svh flex flex-col">

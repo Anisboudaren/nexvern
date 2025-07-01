@@ -12,3 +12,24 @@ export interface AuthContextType {
   me: UserType | null;
   setMe: (user: UserType | null) => void;
 }
+
+export type RoleType = {
+  title: string;
+  description: string;
+};
+
+export type ProjectType = {
+  id?: string; // Optional for creation
+  title: string;
+  description: string;
+  category: string;
+  teamSize: number;
+  stage: string;
+  stageColor: string;
+  founder: string;
+  datePosted: string; // ISO date string (e.g. '2024-06-29')
+  website?: string;
+  status: string;
+  image: string;
+  roles: RoleType[];
+};
