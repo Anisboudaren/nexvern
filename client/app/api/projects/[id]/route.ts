@@ -1,13 +1,14 @@
-// app/api/projects/[id]/route.ts
 import { PrismaClient } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, context: { params: { id: string } }) {
+  const { id } = context.params;
+
   try {
     const project = await prisma.project.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { roles: true },
     });
 
