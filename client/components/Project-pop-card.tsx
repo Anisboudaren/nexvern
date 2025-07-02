@@ -8,31 +8,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
-interface Role {
-  title: string;
-  description?: string;
-}
-
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  teamSize: number;
-  stage: string;
-  stageColor: string;
-  founder: string;
-  datePosted: string;
-  website?: string;
-  status: string;
-  marginRate?: string;
-  roles: Role[];
-  image: string;
-}
+import { ProjectType } from '@/types';
 
 interface ProjectPopCardProps {
-  project: Project;
+  project: ProjectType;
 }
 
 export default function ProjectPopCard({ project }: ProjectPopCardProps) {
@@ -265,12 +244,6 @@ ${project.roles
                         <span className="text-muted-foreground">Status</span>
                         <span className="font-medium">{project.status}</span>
                       </div>
-                      {project.marginRate && (
-                        <div className="flex justify-between py-2 border-b border-muted">
-                          <span className="text-muted-foreground">Margin Rate</span>
-                          <span className="font-medium">{project.marginRate}</span>
-                        </div>
-                      )}
                     </div>
                   </div>
 

@@ -126,7 +126,15 @@ export default function HomePage() {
     }
 
     return filtered;
-  }, [filters]);
+  }, [
+    filters.category,
+    filters.query,
+    filters.sortBy,
+    filters.stage,
+    filters.status,
+    filters.teamSize,
+    sampleProjects,
+  ]);
 
   const clearSearch = () => {
     setFilters({

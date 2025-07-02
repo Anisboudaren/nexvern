@@ -1,51 +1,40 @@
 /* eslint-disable @next/next/no-img-element */
-"use client"
+'use client';
 
-import { useState } from "react"
-import { ChevronDown, ChevronUp, ExternalLink, Calendar, Users, Building, Heart, Copy, Check } from "lucide-react"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-
-interface Role {
-  title: string
-  description?: string
-}
-
-interface Project {
-  id: string
-  title: string
-  description: string
-  category: string
-  teamSize: number
-  stage: string
-  stageColor: string
-  founder: string
-  datePosted: string
-  website?: string
-  status: string
-  marginRate?: string
-  roles: Role[]
-  image: string
-}
+import { useState } from 'react';
+import {
+  ChevronDown,
+  ChevronUp,
+  ExternalLink,
+  Calendar,
+  Users,
+  Building,
+  Heart,
+  Copy,
+  Check,
+} from 'lucide-react';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { ProjectType } from '@/types';
 
 interface ProjectCardProps {
-  project: Project
+  project: ProjectType;
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [isSaved, setIsSaved] = useState(false)
-  const [isCopied, setIsCopied] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    })
-  }
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
 
   const handleCopy = async () => {
     const projectInfo = `${project.title}
@@ -54,30 +43,39 @@ Founder: ${project.founder}
 Stage: ${project.stage}
 Team Size: ${project.teamSize}
 Status: ${project.status}
-${project.website ? `Website: ${project.website}` : ""}
+${project.website ? `Website: ${project.website}` : ''}
 
 ${project.description}
 
 Available Roles:
-${project.roles.map((role) => `• ${role.title}${role.description ? `: ${role.description}` : ""}`).join("\n")}
-`
+${project.roles
+  .map(role => `• ${role.title}${role.description ? `: ${role.description}` : ''}`)
+  .join('\n')}
+`;
 
     try {
-      await navigator.clipboard.writeText(projectInfo)
-      setIsCopied(true)
-      setTimeout(() => setIsCopied(false), 2000)
+      await navigator.clipboard.writeText(projectInfo);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy:", err)
+      console.error('Failed to copy:', err);
     }
-  }
+  };
 
   return (
     <Card className="w-full pt-0 max-w-2xl mx-auto overflow-hidden">
       {/* Project Image */}
       <div className="relative h-48 md:h-56 overflow-hidden">
-        <img src={project.image || "/placeholder.svg"} alt={project.title} className="w-full h-full object-cover" />
+        <img
+          src={project.image || '/placeholder.svg'}
+          alt={project.title}
+          className="w-full h-full object-cover"
+        />
         <div className="absolute top-4 left-4">
-          <Badge className="text-white font-medium px-3 py-1" style={{ backgroundColor: project.stageColor }}>
+          <Badge
+            className="text-white font-medium px-3 py-1"
+            style={{ backgroundColor: project.stageColor }}
+          >
             {project.stage}
           </Badge>
         </div>
@@ -109,7 +107,12 @@ ${project.roles.map((role) => `• ${role.title}${role.description ? `: ${role.d
             </p>
             {project.website && (
               <Button variant="outline" size="sm" asChild>
-                <a href={project.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                <a
+                  href={project.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2"
+                >
                   <ExternalLink className="h-4 w-4" />
                   Visit Website
                 </a>
@@ -130,9 +133,11 @@ ${project.roles.map((role) => `• ${role.title}${role.description ? `: ${role.d
               className="flex items-center gap-2 hover:bg-muted/50"
             >
               <Heart
-                className={`h-4 w-4 transition-colors ${isSaved ? "fill-red-500 text-red-500" : "text-muted-foreground"}`}
+                className={`h-4 w-4 transition-colors ${
+                  isSaved ? 'fill-red-500 text-red-500' : 'text-muted-foreground'
+                }`}
               />
-              <span className="text-sm">{isSaved ? "Saved" : "Save"}</span>
+              <span className="text-sm">{isSaved ? 'Saved' : 'Save'}</span>
             </Button>
 
             <Button
@@ -140,26 +145,29 @@ ${project.roles.map((role) => `• ${role.title}${role.description ? `: ${role.d
               onClick={() => setIsExpanded(!isExpanded)}
               className="flex items-center gap-2 hover:bg-muted/50"
             >
-              <span>{isExpanded ? "Show Less" : "Show More"}</span>
+              <span>{isExpanded ? 'Show Less' : 'Show More'}</span>
               {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             </Button>
 
-            <Button variant="ghost" size="sm" onClick={handleCopy} className="flex items-center gap-2 hover:bg-muted/50">
-            {isCopied ? (
-              <>
-                <Check className="h-4 w-4 text-green-500" />
-                <span className="text-sm text-green-500">Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy className="h-4 w-4" />
-                <span className="text-sm">Copy</span>
-              </>
-            )}
-          </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCopy}
+              className="flex items-center gap-2 hover:bg-muted/50"
+            >
+              {isCopied ? (
+                <>
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="text-sm text-green-500">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  <span className="text-sm">Copy</span>
+                </>
+              )}
+            </Button>
           </div>
-
-          
         </div>
 
         {/* Expanded Content */}
@@ -186,12 +194,6 @@ ${project.roles.map((role) => `• ${role.title}${role.description ? `: ${role.d
                     <span className="text-muted-foreground">Team Size:</span>
                     <span className="font-medium">{project.teamSize} members</span>
                   </div>
-                  {project.marginRate && (
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Margin Rate:</span>
-                      <span className="font-medium">{project.marginRate}</span>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -202,10 +204,15 @@ ${project.roles.map((role) => `• ${role.title}${role.description ? `: ${role.d
                 <h4 className="font-semibold mb-3">Available Roles</h4>
                 <div className="space-y-2">
                   {project.roles.map((role, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 rounded-lg border bg-muted/30"
+                    >
                       <div>
                         <h5 className="font-medium">{role.title}</h5>
-                        {role.description && <p className="text-sm text-muted-foreground mt-1">{role.description}</p>}
+                        {role.description && (
+                          <p className="text-sm text-muted-foreground mt-1">{role.description}</p>
+                        )}
                       </div>
                       <Button size="sm" className="ml-4">
                         Apply
@@ -219,5 +226,5 @@ ${project.roles.map((role) => `• ${role.title}${role.description ? `: ${role.d
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
