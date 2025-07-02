@@ -163,11 +163,24 @@ export default function ProjectFormCard({ initialData, onSubmit }: ProjectFormCa
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit?.(formData);
-    console.log('form data : ', formData);
-    setIsOpen(false);
+    try {
+      const res = await fetch('/api/projects', {
+        method: initialData?.id ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        throw new Error('Failed to submit project');
+      }
+      const data = await res.json();
+      onSubmit?.(data);
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Project submission error:', error);
+      // Optionally show error to user
+    }
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
