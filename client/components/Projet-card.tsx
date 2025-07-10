@@ -67,7 +67,7 @@ ${project.roles
       {/* Project Image */}
       <div className="relative h-48 md:h-56 overflow-hidden">
         <img
-          src={project.image || '/placeholder.svg'}
+          src={project.image || '/nexvern-cover.png'}
           alt={project.title}
           className="w-full h-full object-cover"
         />

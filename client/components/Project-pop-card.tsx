@@ -2,14 +2,23 @@
 'use client';
 
 import { useState } from 'react';
-import { ExternalLink, Calendar, Users, Building, Heart, Copy, Check } from 'lucide-react';
+import { ExternalLink, Calendar, Users, Building, Heart, Copy, Check, Send } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+  DialogHeader,
+} from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ProjectType } from '@/types';
-
+import { Label } from './ui/label';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { RoleType } from '@/types';
 interface ProjectPopCardProps {
   project: ProjectType;
 }
@@ -18,6 +27,10 @@ export default function ProjectPopCard({ project }: ProjectPopCardProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
+  const [isApplicationOpen, setIsApplicationOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<RoleType | null>(null);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -53,6 +66,23 @@ ${project.roles
     }
   };
 
+  const handleApplyClick = (role: RoleType) => {
+    setSelectedRole(role);
+    setIsApplicationOpen(true);
+  };
+
+  const handleApplicationSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Show success animation
+
+    if (showSuccessAnimation) {
+      // Reset the application state
+      setIsApplicationOpen(false);
+      setShowSuccessAnimation(false);
+    }
+    setShowSuccessAnimation(!showSuccessAnimation);
+  };
+
   return (
     <>
       {/* Main Card */}
@@ -60,7 +90,7 @@ ${project.roles
         {/* Project Image */}
         <div className="relative h-48 md:h-56 overflow-hidden">
           <img
-            src={project.image || '/placeholder.svg'}
+            src={project.image || '/nexvern-cover.png'}
             alt={project.title}
             className="w-full h-full object-cover"
           />
@@ -163,7 +193,6 @@ ${project.roles
           </div>
         </CardContent>
       </Card>
-
       {/* Professional Popup Dialog */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTitle className="sr-only">{project.title} - Project Details</DialogTitle>
@@ -328,7 +357,11 @@ ${project.roles
                                   </p>
                                 )}
                               </div>
-                              <Button className="w-full" size="lg">
+                              <Button
+                                className="w-full"
+                                size="lg"
+                                onClick={() => handleApplyClick(role)}
+                              >
                                 Apply for {role.title}
                               </Button>
                             </div>
@@ -370,6 +403,112 @@ ${project.roles
               </div>
             </div>
           </ScrollArea>
+        </DialogContent>
+      </Dialog>
+      {/* Application Dialog */}
+      <Dialog open={isApplicationOpen} onOpenChange={setIsApplicationOpen}>
+        <DialogTitle className="sr-only"></DialogTitle>
+        <DialogContent className="max-w-[calc(100vw-50px)] overflow-hidden">
+          {!showSuccessAnimation ? (
+            <>
+              <DialogHeader>
+                <h1 className="text-lg font-semibold">Apply for {selectedRole?.title}</h1>
+                <p className="text-sm text-muted-foreground">
+                  Submit your application for {selectedRole?.title} at {project.title}
+                </p>
+              </DialogHeader>
+              <form className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="your.email@example.com"
+                    onChange={e => console.log('email', e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="+1 (555) 123-4567"
+                    onChange={e => console.log('phone', e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="note">Message / Cover Letter</Label>
+                  <Textarea
+                    id="note"
+                    placeholder="Tell us why you're interested in this role and what you can bring to the team..."
+                    onChange={e => console.log('note', e.target.value)}
+                    className="min-h-24 resize-none"
+                    required
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    type="submit"
+                    className="flex-1 flex items-center gap-2"
+                    onClick={handleApplicationSubmit}
+                  >
+                    <Send className="h-4 w-4" />
+                    Submit Application
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsApplicationOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 text-center space-y-6">
+              {/* Success Animation */}
+              <div className="relative">
+                {/* Flying Paper Animation */}
+
+                {/* Big Check Mark */}
+                <div className="w-24 h-24 rounded-full bg-green-500 flex items-center justify-center animate-in zoom-in-50 fade-in-0 duration-500">
+                  <Check className="h-12 w-12 text-white animate-in zoom-in-75 fade-in-0 duration-700 delay-300" />
+                </div>
+
+                {/* Pulse Ring Animation */}
+                <div className="absolute inset-0 w-24 h-24 rounded-full bg-green-500/20 animate-ping" />
+              </div>
+
+              {/* Success Message */}
+              <div className="space-y-2 animate-in slide-in-from-bottom-4 fade-in-0 duration-500 delay-500">
+                <h3 className="text-xl font-bold text-green-600">Application Sent!</h3>
+                <p className="text-muted-foreground max-w-sm">
+                  Your application for <span className="font-medium">{project.roles[0].title}</span>{' '}
+                  has been sent to <span className="font-medium">{project.founder}</span>.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  They will review your application and contact you soon!
+                </p>
+              </div>
+
+              {/* Confetti-like dots */}
+              <div className="absolute top-4 left-4 w-2 h-2 bg-yellow-400 rounded-full animate-bounce delay-100" />
+              <div className="absolute top-6 right-8 w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce delay-200" />
+              <div className="absolute bottom-8 left-8 w-2 h-2 bg-pink-400 rounded-full animate-bounce delay-300" />
+              <div className="absolute bottom-4 right-4 w-1.5 h-1.5 bg-green-400 rounded-full animate-bounce delay-150" />
+
+              {/* OK Button */}
+              <Button className="mt-4" onClick={handleApplicationSubmit}>
+                Okay , Got it!
+              </Button>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </>

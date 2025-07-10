@@ -239,7 +239,7 @@ export default function ProjectFormCard({ initialData, onSubmit }: ProjectFormCa
                 <div className="relative h-64 overflow-hidden">
                   {imagePreview ? (
                     <img
-                      src={imagePreview || '/placeholder.svg'}
+                      src={imagePreview || '/nexvern-cover.png'}
                       alt="Project preview"
                       className="w-full h-full object-cover"
                     />
@@ -447,7 +447,7 @@ export default function ProjectFormCard({ initialData, onSubmit }: ProjectFormCa
                             onChange={e => handleInputChange('website', e.target.value)}
                           />
                         </div>
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                           <Label htmlFor="marginRate">Margin Rate (Optional)</Label>
                           <Input
                             id="marginRate"
@@ -455,7 +455,7 @@ export default function ProjectFormCard({ initialData, onSubmit }: ProjectFormCa
                             value={formData.marginRate}
                             onChange={e => handleInputChange('marginRate', e.target.value)}
                           />
-                        </div>
+                        </div> */}
                         <div className="space-y-2">
                           <Label htmlFor="datePosted">Date Posted</Label>
                           <Input
